@@ -2,7 +2,7 @@
 # CAMERA PROPERTIES: CENTURI OR CENTURIPLUS
 #
 
-CameraProperties             2
+CameraProperties             0  # Change this to a unique number if there are multiple cameras in your SerialEMproperties.txt file
 DEcameraType                 5
 DECameraServerIP             127.0.0.1
 DECameraReadPort             13240
