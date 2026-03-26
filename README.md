@@ -121,7 +121,7 @@ endif
 
 ### Setting DE-MC properties
 
-To 2et the value of a DE-MC property, use:
+To set the value of a DE-MC property, use:
 
 `SetDEServerProperty var text`
 
