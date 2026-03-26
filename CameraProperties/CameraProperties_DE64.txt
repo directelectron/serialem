@@ -1,0 +1,42 @@
+#
+# CAMERA PROPERTIES: DE-64
+#
+
+CameraProperties             0  # Change this to a unique number if there are multiple cameras in your SerialEMproperties.txt file
+DEcameraType                 2
+DECameraServerIP             127.0.0.1
+DECameraReadPort             13240
+DECameraWritePort            13240
+Name                         DE64
+PixelSizeInMicrons           6.5
+CameraSizeX                  8192
+CameraSizeY                  8192
+XMustBeMultipleOf            2
+YMustBeMultipleOf            2
+Binnings                     1 2 4 8 16
+RelativeGainFactors          1 0.25 0.0625 0.015625 0.00390625
+DEImageRotation              0
+DEImageInvertXAxis           0
+MakesUnsignedImages          1
+#CountsPerElectron            206  # Uncomment this line for 300 kV
+#CountsPerElectron            316  # Uncomment this line for 200 kV
+#CountsPerElectron            791  # Uncomment this line for 120 kV
+#CountsPerElectron            1379  # Uncomment this line for 80 kV
+HotPixelsAreImodCoords       1
+MaximumXRayDiameter          6
+OnlyOneShutter               0
+BeamBlankShutter             0
+StartupDelay                 0.335 
+ExtraBeamTime                0.3
+BuiltInSettling              0.0
+MinimumDriftSettling         0.01
+ShutterDeadTime              0.024
+Retractable                  1
+InsertionDelay               5.0
+RetractionDelay              5.0
+TaskTargetSize               2048   # Change this if desired
+Order                        1      # Change this if there are multiple cameras on the microscope
+FilmToCameraMagnification    1.2    # Change this to the correct value for your installation
+# Create a mag table with the following format:
+# RotationAndPixel [MagIndex] [DeltaRotation (999 not measured)] [SolvedRotation (999 not measured)] [Pixel size (nm, 0 not measured)]
+EndCameraProperties
