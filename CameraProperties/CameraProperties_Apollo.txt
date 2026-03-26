@@ -1,5 +1,5 @@
 #
-# CAMERA PROPERTIES APOLLO
+# CAMERA PROPERTIES: APOLLO, APOLLOXS, OR ARTEMIS
 #
 
 CameraProperties             2
@@ -7,7 +7,7 @@ DEcameraType                 5
 DECameraServerIP             127.0.0.1
 DECameraReadPort             13240
 DECameraWritePort            13240
-Name                         Apollo
+Name                         Apollo  # Change this to ApolloXS or Artemis if you have one of those models instead
 PixelSizeInMicrons           4
 CameraSizeX                  8192
 CameraSizeY                  8192
