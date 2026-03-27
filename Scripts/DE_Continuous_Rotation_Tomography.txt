@@ -1,0 +1,198 @@
+ScriptName DE_Continuous_Rotation_Tomography
+# For SerialEM-controlled continuous stage rotation and
+# simultaneous mode movie recording for tomography.
+
+# License ISC: Internet Software Consortium license,
+# http://opensource.org/licenses/ISC
+
+# Written by Benjamin Bammes (bbammes@directelectron.com),
+# Isaac Forrester (isaac.forrester@bcm.edu), and Erik Anderson
+# (erik.anderson@bcm.edu).
+
+#################
+## IMPORTANT ##
+#################
+
+# Ensure that Record mode has Frame Saving enabled!
+
+# Check the e/physpix/s over an empty area using Record and
+# enter the value for "eps" in the OPTIONS setting.
+
+# Checking microscope alignment, coma-free 
+
+# Set the other OPTIONS parameters as desired.
+
+# The Dose options are in units of e/A2.
+
+# totalDose includes the zeroDegDose.
+
+# Tilt angles are given in degrees.
+
+# Tilting starts at 0 degrees and goes up to maxDeg, then
+# tilting starts at overlapDeg and goes down to minDeg.
+
+# tiltingDelay is the time between issuing the TiltDuringRecord command
+# and the stage tilt beginning. This delay seems to be somewhat variable,
+# even on the same microscope, so set this to the minimum observed
+# delay so that the recorded movie does not miss the beginning of stage
+# rotation.
+
+##############
+## OPTIONS ##
+##############
+
+eps = 23.15
+defocus = -5
+zeroDegDose = 20
+totalDose = 120
+minDeg = -60
+maxDeg = 60
+overlapDeg = 2
+extraTime = 0.5
+tiltingDelay = 1.55
+
+###################
+## GET SETTINGS ##
+###################
+
+ReportBinning R
+binningValue = $reportedValue1
+ReportCurrentPixelSize R
+apixPhys = $reportedValue1 * 2 / $binningValue
+
+###################
+## CALCULATIONS ##
+###################
+
+doseRate = $eps / ($apixPhys * $apixPhys)
+zeroDegTime = $zeroDegDose / $doseRate
+tiltingTime = ($totalDose - $zeroDegDose) / $doseRate
+tiltingSpeed = (($maxDeg - $minDeg + $overlapDeg) / $tiltingTime - 0.037) / 29
+posDelay = ($tiltingDelay + $zeroDegTime) * 1000
+posTime = $zeroDegTime + $tiltingTime * $maxDeg / ($maxDeg - $minDeg + $overlapDeg) + $extraTime
+negDelay = $tiltingDelay * 1000
+negTime = $tiltingTime * ($overlapDeg - $minDeg) / ($maxDeg - $minDeg + $overlapDeg) + $extraTime
+degPerS = ($maxDeg - $minDeg + $overlapDeg) / $tiltingTime
+
+############
+## SCRIPT ##
+############
+
+echo
+echo ================================
+echo DE_Continous_Rotation_Tomography
+echo
+
+echo Defocus = $defocus um
+echo Physical pixel size = $apixPhys A/pix
+echo Super-resolution binning factor = $binningValue
+echo Exposure rate on camera = $eps e/physpix/s
+echo Initial zero deg exposure = $zeroDegDose e/A2
+echo Total exposure = $totalDose e/A2
+echo Minimum tilt angle = $minDeg deg
+echo Maximum tilt angle = $maxDeg deg
+echo Overlap angle = $overlapDeg deg
+echo Extra time = $extraTime s
+echo TiltDuringRecord delay = $tiltingDelay s
+echo Exposure rate = $doseRate e/A2/s
+echo Initial zero deg time = $zeroDegTime s
+echo Total tilting time = $tiltingTime s
+echo Tilt speed setting = $tiltingSpeed
+echo Tilt speed = $degPerS deg/s
+echo Positive direction tilt delay = $posDelay ms
+echo Positive direction exposure time = $posTime s
+echo Negative direction tilt delay = $negDelay ms
+echo Negative direction exposure time = $negTime s
+echo
+
+ResetClock
+
+ReportFrameBaseName
+baseName = $reportedValue2
+
+ScreenUp
+SetBeamBlank 1
+SetColumnOrGunValve 1
+TiltTo 0
+
+CameraProperties
+echo Camera physical pixel size is $reportedValue4 um
+ReportMag
+echo TEM magnification is $reportedValue1 x
+ReportSpotSize
+echo TEM spot size is $reportedValue1
+ReportPercentC2
+echo TEM illumination C2 is at $reportedValue1 percent
+
+echo Loading record mode settings...
+SetDoseFracParams 1 1 0 0 1
+SetFrameTime R 0.016
+
+echo Autofocusing...
+GoToLowDoseArea F
+AutoFocus 1
+SetDefocus $defocus_val
+
+echo Acquiring view mode for re-aligning...
+GoToLowDoseArea V
+V
+Copy A H
+
+echo Setting eucentricity...
+GoToLowDoseArea V
+Eucentricity 6
+
+echo Initializing tilting direction to positive...
+TiltTo -10
+Delay 2 s
+TiltTo 0
+
+echo Autofocusing...
+GoToLowDoseArea F
+AutoFocus 1
+
+echo Realigning...
+GoToLowDoseArea V
+
+V
+AlignTo H
+
+echo Going to record mode...
+GoToLowDoseArea R
+SetDefocus $defocus
+Delay 5 s
+
+echo Acquiring positive tilt direction...
+GoToLowDoseArea R
+Delay 5 s
+SetExposure R $posTime 0
+SetFrameBaseName 1 1 -1 $baseName_pos
+TiltDuringRecord $maxDeg $posDelay $tiltingSpeed
+SetFrameBaseName 1 1 -1 $baseName
+
+echo Tilting back to near zero...
+TiltTo $overlapDeg
+
+echo Realigning...
+GoToLowDoseArea V
+V
+AlignTo H
+
+echo Acquiring negative tilt direction...
+GoToLowDoseArea R
+Delay 5 s
+SetExposure R $negTime 0
+SetFrameBaseName 1 1 -1 $baseName_neg
+TiltDuringRecord $minDeg $negDelay $tiltingSpeed
+SetFrameBaseName 1 1 -1 $baseName
+
+echo Tilting back to zero...
+TiltTo 0
+SetBeamBlank 1
+
+ReportClock
+
+echo Acquisition complete
+
+echo ========================================
+echo
