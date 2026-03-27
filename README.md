@@ -16,8 +16,8 @@ This README.md file contains information about:
   * [Getting DE-MC properties](#getting-de-mc-properties)
   * [Setting DE-MC properties](#setting-de-mc-properties)
   * [Sensor maintenance cycle](#sensor-maintenance-cycle)
-
-Note that additional scripts are available at the [SerialEM Script Repository](https://serialemscripts.nexperion.net/) managed by [Nexperion](https://www.nexperion.net/).
+* [SerialEM scripts](#serialem-scripts)
+* [Additional Resouces](#additional-resources)
 
 ## Setup
 
@@ -37,6 +37,8 @@ To install and setup SerialEM:
 5. Follow any instructions shown on the screen related to copying files to other computers (e.g., copying FEI-SEMserver.exe and SEM-AutoIT.exe to a Thermo Fisher microscope computer).
 6. Edit the C:\ProgramData\SerialEM\SerialEMproperties.txt file to set the microscope IP address (e.g., `FEISEMServerIP` for Thermo Fisher microscopes or `SocketServerIPif64` for JEOL microscopes) and to add camera specific information (see below).
 7. Open SerialEM, test, and perform calibrations.
+
+Chen Xu has a helpful [Step-by-Step Guide for Installation and Calibration](https://sphinx-emdocs.readthedocs.io/en/latest/serialEM-note-install-and-calib.html) that provides more details on the basic steps outlined above.
 
 For detailed information about SerialEM setup and calibration, see the detailed [Setting Up SerialEM](https://bio3d.colorado.edu/SerialEM/hlp/html/setting_up_serialem.htm) page.
 
@@ -150,3 +152,14 @@ To perform a sensor maintenance cycle (heating the sensor for a period of time i
 where `#H` is the number of hours to wait between sensor maintenance cycles. If `#H` is positive, the sensor maintenance cycle is only executed if the number of hours since the last sensor maintenance cycle exceeds `#H`. If `#H` is 0, the command executes immediately and unconditionally. If `#H` is negative (e.g., -1), the command simply records the current time as the time of the last sensor maintenance cycle.
 
 SerialEM's maximum waiting time for completion of the sensor maintenance cycle is controlled by the value of the "Sensor - Maintenance Cycle Duration (s)" property in DE-MC when SerialEM starts. IMPORTANT: If you modify this property value after SerialEM is already running, it should only be changed to a LOWER value that its value at SerialEM start-up.
+
+## SerialEM scripts
+
+* [DE-Continuous-Rotation-Tomography](Scripts/DE_Continuous_Rotation_Tomography.txt): Bi-directional continuous rotation tomography acquisition, with an optional zero-degree tilt image acquired first.
+
+## Additional resources
+
+The following additional resources may be helpful for SerialEM setup and use:
+
+* The SerialEM Notes at the [UMASS Cryo-EM Docs](https://sphinx-emdocs.readthedocs.io/en/latest/index.html) contain a variety of information, procedures, tips, and scripts.
+* Many SerialEM scripts are available at the [SerialEM Script Repository](https://serialemscripts.nexperion.net/) managed by [Nexperion](https://www.nexperion.net/).
