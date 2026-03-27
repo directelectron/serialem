@@ -17,7 +17,7 @@ This README.md file contains information about:
   * [Setting DE-MC properties](#setting-de-mc-properties)
   * [Sensor maintenance cycle](#sensor-maintenance-cycle)
 * [SerialEM scripts](#serialem-scripts)
-* [Additional Resouces](#additional-resources)
+* [Additional resouces](#additional-resources)
 
 ## Setup
 
